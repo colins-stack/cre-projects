@@ -1,3 +1,5 @@
+"use client";
+
 import type { DocLink } from "@/lib/types";
 
 export function DocLinkChips({ links }: { links: DocLink[] }) {
