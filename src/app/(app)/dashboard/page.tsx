@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/status-badge";
-import { SignOutButton } from "./sign-out-button";
 import type { TaskWithProject } from "@/lib/types";
 
 function toDateOnly(date: Date) {
@@ -69,42 +68,37 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
-            <p className="text-sm text-gray-500">{user?.email}</p>
+    <div>
+      <div className="mb-6">
+        <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
+        <p className="text-sm text-gray-500">{user?.email}</p>
+      </div>
+
+      <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+          >
+            <p className="text-2xl font-semibold text-gray-900">
+              {stat.value}
+            </p>
+            <p className="mt-1 text-xs text-gray-500">{stat.label}</p>
           </div>
-          <SignOutButton />
-        </div>
+        ))}
+      </div>
 
-        <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
-            >
-              <p className="text-2xl font-semibold text-gray-900">
-                {stat.value}
-              </p>
-              <p className="mt-1 text-xs text-gray-500">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-2">
-          <TaskList
-            title="Needs Attention"
-            emptyText="Nothing blocked or overdue."
-            tasks={(needsAttention as TaskWithProject[] | null) ?? []}
-          />
-          <TaskList
-            title="Upcoming"
-            emptyText="No upcoming tasks with a due date."
-            tasks={(upcoming as TaskWithProject[] | null) ?? []}
-          />
-        </div>
+      <div className="grid gap-6 sm:grid-cols-2">
+        <TaskList
+          title="Needs Attention"
+          emptyText="Nothing blocked or overdue."
+          tasks={(needsAttention as TaskWithProject[] | null) ?? []}
+        />
+        <TaskList
+          title="Upcoming"
+          emptyText="No upcoming tasks with a due date."
+          tasks={(upcoming as TaskWithProject[] | null) ?? []}
+        />
       </div>
     </div>
   );
