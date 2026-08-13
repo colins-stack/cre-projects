@@ -99,30 +99,33 @@ export default async function ProjectsPage({
           {(projects as Project[]).map((project) => {
             const progress = progressByProject.get(project.id);
             return (
-              <Link
+              <div
                 key={project.id}
-                href={`/projects/${project.id}`}
-                className="block rounded-lg border border-gray-200 bg-white p-5 shadow-sm hover:border-gray-300"
+                className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm hover:border-gray-300"
               >
-                <div className="mb-2 flex items-start justify-between gap-2">
-                  <h2 className="font-medium text-gray-900">
-                    {project.name}
-                  </h2>
-                  <StatusBadge status={project.status} />
-                </div>
+                <Link href={`/projects/${project.id}`} className="block">
+                  <div className="mb-2 flex items-start justify-between gap-2">
+                    <h2 className="font-medium text-gray-900">
+                      {project.name}
+                    </h2>
+                    <StatusBadge status={project.status} />
+                  </div>
 
-                {project.description && (
-                  <p className="mb-3 text-sm text-gray-600">
-                    {project.description}
+                  {project.description && (
+                    <p className="mb-3 text-sm text-gray-600">
+                      {project.description}
+                    </p>
+                  )}
+
+                  <p className="mb-3 text-xs text-gray-500">
+                    {progress
+                      ? `${progress.done}/${progress.total} done`
+                      : "No tasks yet"}
                   </p>
-                )}
-
-                <p className="mb-3 text-xs text-gray-500">
-                  {progress ? `${progress.done}/${progress.total} done` : "No tasks yet"}
-                </p>
+                </Link>
 
                 <DocLinkChips links={project.doc_links ?? []} />
-              </Link>
+              </div>
             );
           })}
         </div>
