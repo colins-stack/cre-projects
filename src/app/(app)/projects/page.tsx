@@ -99,9 +99,10 @@ export default async function ProjectsPage({
           {(projects as Project[]).map((project) => {
             const progress = progressByProject.get(project.id);
             return (
-              <div
+              <Link
                 key={project.id}
-                className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
+                href={`/projects/${project.id}`}
+                className="block rounded-lg border border-gray-200 bg-white p-5 shadow-sm hover:border-gray-300"
               >
                 <div className="mb-2 flex items-start justify-between gap-2">
                   <h2 className="font-medium text-gray-900">
@@ -121,7 +122,7 @@ export default async function ProjectsPage({
                 </p>
 
                 <DocLinkChips links={project.doc_links ?? []} />
-              </div>
+              </Link>
             );
           })}
         </div>
