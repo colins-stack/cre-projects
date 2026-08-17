@@ -124,11 +124,11 @@
    card surface, and border tones to subtly match that accent's hue. */
 .dark,
 .dark[data-accent="terracotta"] {
-  --background: #191410;
-  --surface: #241d17;
-  --gray-50: #191410;
-  --gray-100: #241d17;
-  --gray-200: #382d22;
+  --background: #191210;
+  --surface: #241a17;
+  --gray-50: #191210;
+  --gray-100: #241a17;
+  --gray-200: #382822;
 
   --accent-50: #2b1710;
   --accent-100: #4a2416;
