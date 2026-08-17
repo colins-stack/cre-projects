@@ -28,12 +28,10 @@
 .dark {
   --foreground: #f7f1e7;
 
-  /* Shared across every accent so text stays consistent; only the
-     background/surface/border tones (below) shift per accent. */
+  /* Shared across every accent so headings/borders stay consistent; the
+     muted-text tier (400/500/600) and background/surface (below) tint
+     per accent instead. */
   --gray-300: #4f4030;
-  --gray-400: #6e5c47;
-  --gray-500: #8f7c65;
-  --gray-600: #ab9a85;
   --gray-700: #c8bba8;
   --gray-800: #e2d8c9;
   --gray-900: #f7f1e7;
@@ -129,6 +127,9 @@
   --gray-50: #191210;
   --gray-100: #241a17;
   --gray-200: #382822;
+  --gray-400: #87655a;
+  --gray-500: #ad8f85;
+  --gray-600: #c2aba3;
 
   --accent-50: #2b1710;
   --accent-100: #4a2416;
@@ -147,6 +148,9 @@
   --gray-50: #12181c;
   --gray-100: #1a2228;
   --gray-200: #2a3540;
+  --gray-400: #5a7487;
+  --gray-500: #859cad;
+  --gray-600: #a3b5c2;
 
   --accent-50: #0e161c;
   --accent-100: #16232b;
@@ -165,6 +169,9 @@
   --gray-50: #14180f;
   --gray-100: #1c2117;
   --gray-200: #2c3322;
+  --gray-400: #79875a;
+  --gray-500: #a1ad85;
+  --gray-600: #b9c2a3;
 
   --accent-50: #1c2113;
   --accent-100: #2b331d;
@@ -183,6 +190,9 @@
   --gray-50: #1a1412;
   --gray-100: #241c1a;
   --gray-200: #392b28;
+  --gray-400: #875e5a;
+  --gray-500: #ad8885;
+  --gray-600: #c2a6a3;
 
   --accent-50: #251310;
   --accent-100: #3d1f1b;
@@ -202,9 +212,9 @@
   --gray-100: #232326;
   --gray-200: #313135;
   --gray-300: #45454a;
-  --gray-400: #65656b;
-  --gray-500: #8a8a90;
-  --gray-600: #adadb2;
+  --gray-400: #6d6d74;
+  --gray-500: #96969c;
+  --gray-600: #b0b0b5;
   --gray-700: #c9c9cd;
   --gray-800: #e4e4e6;
   --gray-900: #f4f4f5;
