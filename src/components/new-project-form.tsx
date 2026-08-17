@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { ProjectStatus } from "@/lib/types";
+import type { Lane, ProjectStatus } from "@/lib/types";
 
 const STATUSES: ProjectStatus[] = [
   "future",
@@ -13,7 +13,7 @@ const STATUSES: ProjectStatus[] = [
   "completed",
 ];
 
-export function NewProjectForm() {
+export function NewProjectForm({ lanes }: { lanes: Lane[] }) {
   const router = useRouter();
   const supabase = createClient();
 
@@ -21,6 +21,7 @@ export function NewProjectForm() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<ProjectStatus>("future");
+  const [laneId, setLaneId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -33,6 +34,7 @@ export function NewProjectForm() {
       name,
       description: description || null,
       status,
+      lane_id: laneId || null,
     });
 
     setSaving(false);
@@ -45,6 +47,7 @@ export function NewProjectForm() {
     setName("");
     setDescription("");
     setStatus("future");
+    setLaneId("");
     setOpen(false);
     router.refresh();
   }
@@ -89,21 +92,41 @@ export function NewProjectForm() {
         />
       </div>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Status
-        </label>
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value as ProjectStatus)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
-        >
-          {STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Status
+          </label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as ProjectStatus)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
+          >
+            {STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Lane
+          </label>
+          <select
+            value={laneId}
+            onChange={(e) => setLaneId(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
+          >
+            <option value="">No lane</option>
+            {lanes.map((lane) => (
+              <option key={lane.id} value={lane.id}>
+                {lane.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}

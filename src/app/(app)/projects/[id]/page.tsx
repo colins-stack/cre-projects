@@ -2,8 +2,9 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/status-badge";
 import { ProjectDocLinks } from "@/components/project-doc-links";
+import { ProjectLanePicker } from "@/components/project-lane-picker";
 import { TaskManager } from "@/components/task-manager";
-import type { Project, Task } from "@/lib/types";
+import type { Lane, Project, Task } from "@/lib/types";
 
 export default async function ProjectDetailPage({
   params,
@@ -13,14 +14,16 @@ export default async function ProjectDetailPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const [{ data: project }, { data: tasks }] = await Promise.all([
-    supabase.from("projects").select("*").eq("id", id).single(),
-    supabase
-      .from("tasks")
-      .select("*")
-      .eq("project_id", id)
-      .order("created_at", { ascending: false }),
-  ]);
+  const [{ data: project }, { data: tasks }, { data: lanes }] =
+    await Promise.all([
+      supabase.from("projects").select("*").eq("id", id).single(),
+      supabase
+        .from("tasks")
+        .select("*")
+        .eq("project_id", id)
+        .order("created_at", { ascending: false }),
+      supabase.from("lanes").select("*").order("created_at"),
+    ]);
 
   if (!project) notFound();
 
@@ -40,6 +43,13 @@ export default async function ProjectDetailPage({
             {typedProject.description}
           </p>
         )}
+        <div className="mb-3">
+          <ProjectLanePicker
+            projectId={typedProject.id}
+            laneId={typedProject.lane_id}
+            lanes={(lanes as Lane[]) ?? []}
+          />
+        </div>
         <ProjectDocLinks
           projectId={typedProject.id}
           links={typedProject.doc_links ?? []}

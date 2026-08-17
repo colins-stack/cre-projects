@@ -12,12 +12,19 @@ export interface DocLink {
   url: string;
 }
 
+export interface Lane {
+  id: string;
+  name: string;
+  created_at: string;
+}
+
 export interface Project {
   id: string;
   name: string;
   description: string | null;
   status: ProjectStatus;
   doc_links: DocLink[];
+  lane_id: string | null;
   created_at: string;
 }
 
