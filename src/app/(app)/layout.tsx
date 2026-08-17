@@ -1,7 +1,5 @@
 import { SidebarNav } from "@/components/sidebar-nav";
 import { SignOutButton } from "@/components/sign-out-button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { AccentPicker } from "@/components/accent-picker";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,8 +11,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="flex-1">
           <SidebarNav />
         </div>
-        <AccentPicker />
-        <ThemeToggle />
         <SignOutButton />
       </aside>
       <main className="flex-1 p-8">

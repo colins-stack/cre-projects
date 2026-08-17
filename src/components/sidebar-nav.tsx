@@ -7,6 +7,7 @@ const LINKS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/projects", label: "Projects" },
   { href: "/tasks", label: "Tasks" },
+  { href: "/settings", label: "Settings" },
 ];
 
 export function SidebarNav() {
