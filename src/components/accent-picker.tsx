@@ -29,7 +29,8 @@ export function AccentPicker() {
             style={
               accent.key === "plain"
                 ? {
-                    background: "linear-gradient(135deg, #000 50%, #fff 50%)",
+                    background:
+                      "linear-gradient(135deg, var(--swatch-plain) 50%, #fff 50%)",
                   }
                 : { background: `var(--swatch-${accent.key})` }
             }

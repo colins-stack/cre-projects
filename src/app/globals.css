@@ -20,6 +20,7 @@
   --swatch-blue: #3f6580;
   --swatch-sage: #59663a;
   --swatch-rose: #8a3b33;
+  --swatch-plain: #6b6b74;
 }
 
 .dark {
@@ -37,6 +38,7 @@
   --swatch-blue: #6996b3;
   --swatch-sage: #adb886;
   --swatch-rose: #cb8079;
+  --swatch-plain: #3f3f46;
 }
 
 /* Accent palettes — light mode (default: terracotta). Each block also
