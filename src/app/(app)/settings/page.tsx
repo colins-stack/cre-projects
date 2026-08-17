@@ -1,5 +1,6 @@
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AccentPicker } from "@/components/accent-picker";
+import { SignOutButton } from "@/components/sign-out-button";
 
 export default function SettingsPage() {
   return (
@@ -16,11 +17,15 @@ export default function SettingsPage() {
           <ThemeToggle />
         </div>
 
-        <div>
+        <div className="mb-6">
           <p className="mb-3 text-sm font-medium text-gray-700">
             Accent color
           </p>
           <AccentPicker />
+        </div>
+
+        <div className="border-t border-gray-200 pt-5">
+          <SignOutButton />
         </div>
       </div>
     </div>

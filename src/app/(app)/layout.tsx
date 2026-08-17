@@ -1,5 +1,4 @@
-import { SidebarNav } from "@/components/sidebar-nav";
-import { SignOutButton } from "@/components/sign-out-button";
+import { SidebarNav, SettingsLink } from "@/components/sidebar-nav";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +10,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="flex-1">
           <SidebarNav />
         </div>
-        <SignOutButton />
+        <SettingsLink />
       </aside>
       <main className="flex-1 p-8">
         <div className="mx-auto max-w-4xl">{children}</div>
