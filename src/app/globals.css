@@ -26,13 +26,10 @@
 }
 
 .dark {
-  --background: #191410;
   --foreground: #f7f1e7;
-  --surface: #241d17;
 
-  --gray-50: #191410;
-  --gray-100: #241d17;
-  --gray-200: #382d22;
+  /* Shared across every accent so text stays consistent; only the
+     background/surface/border tones (below) shift per accent. */
   --gray-300: #4f4030;
   --gray-400: #6e5c47;
   --gray-500: #8f7c65;
@@ -97,9 +94,42 @@
   --accent-800: #532420;
 }
 
-/* Accent palettes — dark mode */
+/* Plain: black & white, no accent hue — neutral background too, not warm */
+[data-accent="plain"] {
+  --background: #fafafa;
+  --surface: #ffffff;
+  --gray-50: #fafafa;
+  --gray-100: #f4f4f5;
+  --gray-200: #e4e4e7;
+  --gray-300: #d4d4d8;
+  --gray-400: #a1a1aa;
+  --gray-500: #71717a;
+  --gray-600: #52525b;
+  --gray-700: #3f3f46;
+  --gray-800: #27272a;
+  --gray-900: #18181b;
+
+  --accent-50: #f4f4f5;
+  --accent-100: #e4e4e7;
+  --accent-200: #d4d4d8;
+  --accent-300: #a1a1aa;
+  --accent-400: #71717a;
+  --accent-500: #52525b;
+  --accent-600: #27272a;
+  --accent-700: #18181b;
+  --accent-800: #000000;
+}
+
+/* Accent palettes — dark mode. Each block also tints the background,
+   card surface, and border tones to subtly match that accent's hue. */
 .dark,
 .dark[data-accent="terracotta"] {
+  --background: #191410;
+  --surface: #241d17;
+  --gray-50: #191410;
+  --gray-100: #241d17;
+  --gray-200: #382d22;
+
   --accent-50: #2b1710;
   --accent-100: #4a2416;
   --accent-200: #6b3420;
@@ -112,6 +142,12 @@
 }
 
 .dark[data-accent="blue"] {
+  --background: #12181c;
+  --surface: #1a2228;
+  --gray-50: #12181c;
+  --gray-100: #1a2228;
+  --gray-200: #2a3540;
+
   --accent-50: #0e161c;
   --accent-100: #16232b;
   --accent-200: #1c3240;
@@ -124,6 +160,12 @@
 }
 
 .dark[data-accent="sage"] {
+  --background: #14180f;
+  --surface: #1c2117;
+  --gray-50: #14180f;
+  --gray-100: #1c2117;
+  --gray-200: #2c3322;
+
   --accent-50: #1c2113;
   --accent-100: #2b331d;
   --accent-200: #3f4c29;
@@ -136,6 +178,12 @@
 }
 
 .dark[data-accent="rose"] {
+  --background: #1a1412;
+  --surface: #241c1a;
+  --gray-50: #1a1412;
+  --gray-100: #241c1a;
+  --gray-200: #392b28;
+
   --accent-50: #251310;
   --accent-100: #3d1f1b;
   --accent-200: #582b25;
@@ -147,11 +195,39 @@
   --accent-800: #e8b6b0;
 }
 
+.dark[data-accent="plain"] {
+  --background: #18181b;
+  --surface: #232326;
+  --gray-50: #18181b;
+  --gray-100: #232326;
+  --gray-200: #313135;
+  --gray-300: #45454a;
+  --gray-400: #65656b;
+  --gray-500: #8a8a90;
+  --gray-600: #adadb2;
+  --gray-700: #c9c9cd;
+  --gray-800: #e4e4e6;
+  --gray-900: #f4f4f5;
+
+  /* Kept dark (not inverted like the color accents) so white button text
+     always has enough contrast. */
+  --accent-50: #313135;
+  --accent-100: #3f3f46;
+  --accent-200: #52525b;
+  --accent-300: #71717a;
+  --accent-400: #a1a1aa;
+  --accent-500: #52525b;
+  --accent-600: #3f3f46;
+  --accent-700: #27272a;
+  --accent-800: #18181b;
+}
+
 /* Accent picker selection ring */
 html[data-accent="terracotta"] [data-swatch="terracotta"],
 html[data-accent="blue"] [data-swatch="blue"],
 html[data-accent="sage"] [data-swatch="sage"],
-html[data-accent="rose"] [data-swatch="rose"] {
+html[data-accent="rose"] [data-swatch="rose"],
+html[data-accent="plain"] [data-swatch="plain"] {
   outline: 2px solid var(--foreground);
   outline-offset: 2px;
 }
