@@ -69,7 +69,7 @@ export default async function ProjectsPage({
           className={`rounded-full px-3 py-1 text-xs font-medium ${
             !activeFilter
               ? "bg-accent-600 text-white"
-              : "bg-white text-gray-700 hover:bg-gray-100"
+              : "bg-surface text-gray-700 hover:bg-gray-100"
           } border border-gray-200`}
         >
           All
@@ -81,7 +81,7 @@ export default async function ProjectsPage({
             className={`rounded-full px-3 py-1 text-xs font-medium ${
               activeFilter === s
                 ? "bg-accent-600 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-100"
+                : "bg-surface text-gray-700 hover:bg-gray-100"
             } border border-gray-200`}
           >
             {STATUS_LABELS[s]}
@@ -101,7 +101,7 @@ export default async function ProjectsPage({
             return (
               <div
                 key={project.id}
-                className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:border-gray-300"
+                className="rounded-xl border border-gray-200 bg-surface p-5 shadow-sm hover:border-gray-300"
               >
                 <Link href={`/projects/${project.id}`} className="block">
                   <div className="mb-2 flex items-start justify-between gap-2">

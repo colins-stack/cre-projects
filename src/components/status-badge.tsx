@@ -4,12 +4,12 @@ const STYLES: Record<string, string> = {
   future: "bg-gray-100 text-gray-700",
   todo: "bg-gray-100 text-gray-700",
   planned: "bg-gray-100 text-gray-700",
-  active: "bg-amber-100 text-amber-800",
-  inprogress: "bg-amber-100 text-amber-800",
-  onhold: "bg-amber-100 text-amber-800",
-  blocked: "bg-red-100 text-red-800",
-  completed: "bg-green-100 text-green-800",
-  done: "bg-green-100 text-green-800",
+  active: "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
+  inprogress: "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
+  onhold: "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
+  blocked: "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300",
+  completed: "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300",
+  done: "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300",
 };
 
 const LABELS: Record<string, string> = {

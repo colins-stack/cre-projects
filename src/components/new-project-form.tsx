@@ -63,7 +63,7 @@ export function NewProjectForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-6 space-y-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+      className="mb-6 space-y-3 rounded-xl border border-gray-200 bg-surface p-4 shadow-sm"
     >
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">

@@ -1,39 +1,87 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #fafaf9;
   --foreground: #292524;
+  --surface: #ffffff;
+
+  --gray-50: #fafaf9;
+  --gray-100: #f5f5f4;
+  --gray-200: #e7e2dc;
+  --gray-300: #d8d0c7;
+  --gray-400: #a89e93;
+  --gray-500: #85796d;
+  --gray-600: #635a4f;
+  --gray-700: #4a4239;
+  --gray-800: #332c25;
+  --gray-900: #241f1a;
+
+  --accent-50: #fdf4f0;
+  --accent-100: #fbe7de;
+  --accent-200: #f5c9b6;
+  --accent-300: #eea688;
+  --accent-400: #e58259;
+  --accent-500: #d9663d;
+  --accent-600: #c1522c;
+  --accent-700: #9e4222;
+  --accent-800: #7c3419;
 }
 
-@theme {
-  /* Warm neutrals in place of Tailwind's default cool gray */
-  --color-gray-50: #fafaf9;
-  --color-gray-100: #f5f5f4;
-  --color-gray-200: #e7e2dc;
-  --color-gray-300: #d8d0c7;
-  --color-gray-400: #a89e93;
-  --color-gray-500: #85796d;
-  --color-gray-600: #635a4f;
-  --color-gray-700: #4a4239;
-  --color-gray-800: #332c25;
-  --color-gray-900: #241f1a;
+.dark {
+  --background: #191410;
+  --foreground: #f7f1e7;
+  --surface: #241d17;
 
-  /* Terracotta accent for primary actions */
-  --color-accent-50: #fdf4f0;
-  --color-accent-100: #fbe7de;
-  --color-accent-200: #f5c9b6;
-  --color-accent-300: #eea688;
-  --color-accent-400: #e58259;
-  --color-accent-500: #d9663d;
-  --color-accent-600: #c1522c;
-  --color-accent-700: #9e4222;
-  --color-accent-800: #7c3419;
+  --gray-50: #191410;
+  --gray-100: #241d17;
+  --gray-200: #382d22;
+  --gray-300: #4f4030;
+  --gray-400: #6e5c47;
+  --gray-500: #8f7c65;
+  --gray-600: #ab9a85;
+  --gray-700: #c8bba8;
+  --gray-800: #e2d8c9;
+  --gray-900: #f7f1e7;
+
+  --accent-50: #2b1710;
+  --accent-100: #4a2416;
+  --accent-200: #6b3420;
+  --accent-300: #8f4527;
+  --accent-400: #c1522c;
+  --accent-500: #d9663d;
+  --accent-600: #e0794f;
+  --accent-700: #e89268;
+  --accent-800: #f0ab86;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
   --font-sans: var(--font-nunito);
+
+  --color-gray-50: var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+
+  --color-accent-50: var(--accent-50);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-accent-800: var(--accent-800);
 }
 
 body {
