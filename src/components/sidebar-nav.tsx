@@ -21,9 +21,9 @@ export function SidebarNav() {
           <Link
             key={link.href}
             href={link.href}
-            className={`block rounded-md px-3 py-2 text-sm font-medium ${
+            className={`block rounded-lg px-3 py-2 text-sm font-medium ${
               active
-                ? "bg-gray-900 text-white"
+                ? "bg-accent-600 text-white"
                 : "text-gray-700 hover:bg-gray-100"
             }`}
           >

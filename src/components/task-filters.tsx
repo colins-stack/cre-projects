@@ -31,7 +31,7 @@ export function TaskFilters({
       <select
         value={searchParams.get("project") ?? ""}
         onChange={(e) => updateParam("project", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-500 focus:outline-none"
+        className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
       >
         <option value="">All projects</option>
         {projects.map((p) => (
@@ -44,7 +44,7 @@ export function TaskFilters({
       <select
         value={searchParams.get("status") ?? ""}
         onChange={(e) => updateParam("status", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-500 focus:outline-none"
+        className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
       >
         <option value="">All statuses</option>
         {STATUSES.map((s) => (
@@ -57,7 +57,7 @@ export function TaskFilters({
       <select
         value={searchParams.get("assignee") ?? ""}
         onChange={(e) => updateParam("assignee", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-500 focus:outline-none"
+        className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
       >
         <option value="">All assignees</option>
         {assignees.map((a) => (

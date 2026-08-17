@@ -109,7 +109,7 @@ function AddTaskForm({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-gray-800"
+        className="rounded-lg bg-accent-600 px-3 py-2 text-sm font-medium text-white hover:bg-accent-700"
       >
         + Add Task
       </button>
@@ -119,7 +119,7 @@ function AddTaskForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+      className="space-y-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
     >
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -129,7 +129,7 @@ function AddTaskForm({
           required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
         />
       </div>
 
@@ -141,7 +141,7 @@ function AddTaskForm({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
         />
       </div>
 
@@ -153,7 +153,7 @@ function AddTaskForm({
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as TaskStatus)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
           >
             {STATUSES.map((s) => (
               <option key={s} value={s}>
@@ -171,7 +171,7 @@ function AddTaskForm({
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
           />
         </div>
 
@@ -183,7 +183,7 @@ function AddTaskForm({
             placeholder="Name or Both"
             value={assignee}
             onChange={(e) => setAssignee(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
           />
         </div>
 
@@ -195,7 +195,7 @@ function AddTaskForm({
             <select
               value={selectedProject}
               onChange={(e) => setSelectedProject(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
             >
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -213,14 +213,14 @@ function AddTaskForm({
         <button
           type="submit"
           disabled={saving}
-          className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="rounded-lg bg-accent-600 px-3 py-2 text-sm font-medium text-white hover:bg-accent-700 disabled:opacity-50"
         >
           {saving ? "Saving…" : "Add task"}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
         >
           Cancel
         </button>
@@ -309,7 +309,7 @@ function TaskRow({
 
   if (!editing) {
     return (
-      <li className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <li className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <p className="font-medium text-gray-900">{task.title}</p>
@@ -330,7 +330,7 @@ function TaskRow({
               onChange={(e) =>
                 handleStatusChange(e.target.value as TaskStatus)
               }
-              className="rounded-md border border-gray-300 px-2 py-1 text-xs focus:border-gray-500 focus:outline-none"
+              className="rounded-lg border border-gray-300 px-2 py-1 text-xs focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
             >
               {STATUSES.map((s) => (
                 <option key={s} value={s}>
@@ -351,7 +351,7 @@ function TaskRow({
   }
 
   return (
-    <li className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <li className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
       <form onSubmit={handleSave} className="space-y-3">
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -361,7 +361,7 @@ function TaskRow({
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
           />
         </div>
 
@@ -373,7 +373,7 @@ function TaskRow({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
           />
         </div>
 
@@ -386,7 +386,7 @@ function TaskRow({
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
             />
           </div>
           <div>
@@ -397,7 +397,7 @@ function TaskRow({
               placeholder="Name or Both"
               value={assignee}
               onChange={(e) => setAssignee(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
             />
           </div>
 
@@ -409,7 +409,7 @@ function TaskRow({
               <select
                 value={projectIdField}
                 onChange={(e) => setProjectIdField(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
               >
                 <option value="">No project</option>
                 {projects.map((p) => (
@@ -433,14 +433,14 @@ function TaskRow({
           <button
             type="submit"
             disabled={saving}
-            className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+            className="rounded-lg bg-accent-600 px-3 py-2 text-sm font-medium text-white hover:bg-accent-700 disabled:opacity-50"
           >
             {saving ? "Saving…" : "Save"}
           </button>
           <button
             type="button"
             onClick={() => setEditing(false)}
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             Cancel
           </button>

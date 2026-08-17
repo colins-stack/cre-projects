@@ -78,7 +78,7 @@ export default async function DashboardPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+            className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
           >
             <p className="text-2xl font-semibold text-gray-900">
               {stat.value}
@@ -114,7 +114,7 @@ function TaskList({
   tasks: TaskWithProject[];
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
       <h2 className="mb-3 text-sm font-semibold text-gray-900">{title}</h2>
       {tasks.length === 0 ? (
         <p className="text-sm text-gray-500">{emptyText}</p>

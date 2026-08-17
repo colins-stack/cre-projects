@@ -43,14 +43,14 @@ export function DocLinkEditor({
       {open ? (
         <form
           onSubmit={handleSubmit}
-          className="flex flex-wrap items-start gap-2 rounded-md border border-gray-200 bg-gray-50 p-3"
+          className="flex flex-wrap items-start gap-2 rounded-lg border border-gray-200 bg-gray-50 p-3"
         >
           <input
             required
             placeholder="Label"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            className="w-32 rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-gray-500 focus:outline-none"
+            className="w-32 rounded-lg border border-gray-300 px-2 py-1 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
           />
           <input
             required
@@ -58,19 +58,19 @@ export function DocLinkEditor({
             placeholder="https://..."
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="min-w-0 flex-1 rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-gray-500 focus:outline-none"
+            className="min-w-0 flex-1 rounded-lg border border-gray-300 px-2 py-1 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
           />
           <button
             type="submit"
             disabled={saving}
-            className="rounded-md bg-gray-900 px-2 py-1 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+            className="rounded-lg bg-accent-600 px-2 py-1 text-sm font-medium text-white hover:bg-accent-700 disabled:opacity-50"
           >
             Add
           </button>
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="rounded-md border border-gray-300 px-2 py-1 text-sm text-gray-700 hover:bg-gray-100"
+            className="rounded-lg border border-gray-300 px-2 py-1 text-sm text-gray-700 hover:bg-gray-100"
           >
             Cancel
           </button>
