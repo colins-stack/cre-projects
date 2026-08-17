@@ -2,7 +2,7 @@
 
 const ACCENTS = [
   { key: "terracotta", label: "Terracotta" },
-  { key: "honey", label: "Honey" },
+  { key: "blue", label: "Blue" },
   { key: "sage", label: "Sage" },
   { key: "rose", label: "Rose" },
 ] as const;
