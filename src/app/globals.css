@@ -18,15 +18,11 @@
   --gray-800: #332c25;
   --gray-900: #241f1a;
 
-  --accent-50: #fdf4f0;
-  --accent-100: #fbe7de;
-  --accent-200: #f5c9b6;
-  --accent-300: #eea688;
-  --accent-400: #e58259;
-  --accent-500: #d9663d;
-  --accent-600: #c1522c;
-  --accent-700: #9e4222;
-  --accent-800: #7c3419;
+  /* Swatch previews for the accent picker: one fixed shade per palette per mode */
+  --swatch-terracotta: #c1522c;
+  --swatch-honey: #a86f17;
+  --swatch-sage: #59663a;
+  --swatch-rose: #8a3b33;
 }
 
 .dark {
@@ -45,6 +41,65 @@
   --gray-800: #e2d8c9;
   --gray-900: #f7f1e7;
 
+  --swatch-terracotta: #e0794f;
+  --swatch-honey: #dfa430;
+  --swatch-sage: #adb886;
+  --swatch-rose: #cb8079;
+}
+
+/* Accent palettes — light mode (default: terracotta) */
+:root,
+[data-accent="terracotta"] {
+  --accent-50: #fdf4f0;
+  --accent-100: #fbe7de;
+  --accent-200: #f5c9b6;
+  --accent-300: #eea688;
+  --accent-400: #e58259;
+  --accent-500: #d9663d;
+  --accent-600: #c1522c;
+  --accent-700: #9e4222;
+  --accent-800: #7c3419;
+}
+
+[data-accent="honey"] {
+  --accent-50: #fdf8ec;
+  --accent-100: #faedcc;
+  --accent-200: #f3d896;
+  --accent-300: #eabf5a;
+  --accent-400: #dfa430;
+  --accent-500: #c98a1e;
+  --accent-600: #a86f17;
+  --accent-700: #855715;
+  --accent-800: #654314;
+}
+
+[data-accent="sage"] {
+  --accent-50: #f6f7f0;
+  --accent-100: #e7ead9;
+  --accent-200: #cdd4b3;
+  --accent-300: #adb886;
+  --accent-400: #8a9c63;
+  --accent-500: #708049;
+  --accent-600: #59663a;
+  --accent-700: #46512e;
+  --accent-800: #363f24;
+}
+
+[data-accent="rose"] {
+  --accent-50: #fbf1f0;
+  --accent-100: #f5dcd9;
+  --accent-200: #e8b6b0;
+  --accent-300: #d88c83;
+  --accent-400: #c2665c;
+  --accent-500: #a84c42;
+  --accent-600: #8a3b33;
+  --accent-700: #6d2f29;
+  --accent-800: #532420;
+}
+
+/* Accent palettes — dark mode */
+.dark,
+.dark[data-accent="terracotta"] {
   --accent-50: #2b1710;
   --accent-100: #4a2416;
   --accent-200: #6b3420;
@@ -54,6 +109,51 @@
   --accent-600: #e0794f;
   --accent-700: #e89268;
   --accent-800: #f0ab86;
+}
+
+.dark[data-accent="honey"] {
+  --accent-50: #2a1f0a;
+  --accent-100: #45330f;
+  --accent-200: #664915;
+  --accent-300: #85601c;
+  --accent-400: #a86f17;
+  --accent-500: #c98a1e;
+  --accent-600: #dfa430;
+  --accent-700: #eabf5a;
+  --accent-800: #f3d896;
+}
+
+.dark[data-accent="sage"] {
+  --accent-50: #1c2113;
+  --accent-100: #2b331d;
+  --accent-200: #3f4c29;
+  --accent-300: #536638;
+  --accent-400: #59663a;
+  --accent-500: #708049;
+  --accent-600: #8a9c63;
+  --accent-700: #adb886;
+  --accent-800: #cdd4b3;
+}
+
+.dark[data-accent="rose"] {
+  --accent-50: #251310;
+  --accent-100: #3d1f1b;
+  --accent-200: #582b25;
+  --accent-300: #74392f;
+  --accent-400: #8a3b33;
+  --accent-500: #a84c42;
+  --accent-600: #c2665c;
+  --accent-700: #d88c83;
+  --accent-800: #e8b6b0;
+}
+
+/* Accent picker selection ring */
+html[data-accent="terracotta"] [data-swatch="terracotta"],
+html[data-accent="honey"] [data-swatch="honey"],
+html[data-accent="sage"] [data-swatch="sage"],
+html[data-accent="rose"] [data-swatch="rose"] {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
 }
 
 @theme inline {
