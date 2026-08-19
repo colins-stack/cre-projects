@@ -223,13 +223,19 @@ export function ProjectBoard({
 
       <DragOverlay dropAnimation={dropAnimation}>
         {activeLane ? (
-          <div className="flex items-center gap-2 rounded-lg bg-surface px-2 py-1 shadow-lg ring-1 ring-gray-200">
-            <span className="text-gray-400">
-              <GripIcon />
-            </span>
-            <span className="text-sm font-semibold text-gray-900">
-              {activeLane.name}
-            </span>
+          <div className="rotate-1 scale-[1.02] rounded-xl border border-gray-200 bg-surface p-4 shadow-xl">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-gray-400">
+                <GripIcon />
+              </span>
+              <h2 className="text-sm font-semibold text-gray-900">
+                {activeLane.name}
+              </h2>
+            </div>
+            <LaneOverlayProjects
+              projects={projectsByLane[activeLane.id] ?? []}
+              progressByProject={progressByProject}
+            />
           </div>
         ) : activeProject ? (
           <div className="rotate-1 scale-105 rounded-xl border border-gray-200 bg-surface p-5 shadow-xl">
@@ -265,31 +271,38 @@ function LaneSection({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.4 : 1,
   };
 
   return (
-    <div ref={setNodeRef} style={style}>
-      <div className="flex items-center gap-2">
-        {dndEnabled && (
-          <button
-            {...attributes}
-            {...listeners}
-            aria-label="Drag to reorder lane"
-            className="cursor-grab touch-none text-gray-400 hover:text-gray-600 active:cursor-grabbing"
-          >
-            <GripIcon />
-          </button>
-        )}
-        <LaneHeader lane={lane} />
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`rounded-xl border p-4 transition-colors ${
+        isDragging ? "border-dashed border-gray-300 bg-gray-50" : "border-transparent"
+      }`}
+    >
+      <div className={isDragging ? "invisible" : ""}>
+        <div className="flex items-center gap-2">
+          {dndEnabled && (
+            <button
+              {...attributes}
+              {...listeners}
+              aria-label="Drag to reorder lane"
+              className="cursor-grab touch-none text-gray-400 hover:text-gray-600 active:cursor-grabbing"
+            >
+              <GripIcon />
+            </button>
+          )}
+          <LaneHeader lane={lane} />
+        </div>
+        <ProjectDropZone
+          containerKey={lane.id}
+          projects={projects}
+          progressByProject={progressByProject}
+          dndEnabled={dndEnabled}
+          emptyText="No projects in this lane yet."
+        />
       </div>
-      <ProjectDropZone
-        containerKey={lane.id}
-        projects={projects}
-        progressByProject={progressByProject}
-        dndEnabled={dndEnabled}
-        emptyText="No projects in this lane yet."
-      />
     </div>
   );
 }
@@ -381,6 +394,34 @@ function SortableProjectCard({
       <div className={isDragging ? "invisible" : ""}>
         <ProjectCardContent project={project} progress={progress} />
       </div>
+    </div>
+  );
+}
+
+function LaneOverlayProjects({
+  projects,
+  progressByProject,
+}: {
+  projects: Project[];
+  progressByProject: ProgressMap;
+}) {
+  if (projects.length === 0) {
+    return <p className="text-sm text-gray-500">No projects in this lane yet.</p>;
+  }
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {projects.map((project) => (
+        <div
+          key={project.id}
+          className="rounded-xl border border-gray-200 bg-surface p-5 shadow-sm"
+        >
+          <ProjectCardContent
+            project={project}
+            progress={progressByProject[project.id]}
+          />
+        </div>
+      ))}
     </div>
   );
 }
