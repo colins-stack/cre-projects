@@ -13,7 +13,13 @@ const STATUSES: ProjectStatus[] = [
   "completed",
 ];
 
-export function NewProjectForm({ lanes }: { lanes: Lane[] }) {
+export function NewProjectForm({
+  lanes,
+  projectCountByLane,
+}: {
+  lanes: Lane[];
+  projectCountByLane: Record<string, number>;
+}) {
   const router = useRouter();
   const supabase = createClient();
 
@@ -35,6 +41,7 @@ export function NewProjectForm({ lanes }: { lanes: Lane[] }) {
       description: description || null,
       status,
       lane_id: laneId || null,
+      position: projectCountByLane[laneId || "unassigned"] ?? 0,
     });
 
     setSaving(false);

@@ -15,6 +15,7 @@ export interface DocLink {
 export interface Lane {
   id: string;
   name: string;
+  position: number;
   created_at: string;
 }
 
@@ -25,6 +26,7 @@ export interface Project {
   status: ProjectStatus;
   doc_links: DocLink[];
   lane_id: string | null;
+  position: number;
   created_at: string;
 }
 

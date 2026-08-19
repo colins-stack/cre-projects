@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export function NewLaneForm() {
+export function NewLaneForm({ nextPosition }: { nextPosition: number }) {
   const router = useRouter();
   const supabase = createClient();
 
@@ -18,7 +18,9 @@ export function NewLaneForm() {
     setError(null);
     setSaving(true);
 
-    const { error } = await supabase.from("lanes").insert({ name });
+    const { error } = await supabase
+      .from("lanes")
+      .insert({ name, position: nextPosition });
 
     setSaving(false);
 
