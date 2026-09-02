@@ -106,9 +106,17 @@ export function ProjectBoard({
     if (activeId === overId) return;
 
     if (activeId.startsWith("lane:")) {
-      if (!overId.startsWith("lane:")) return;
+      const overLaneId = overId.startsWith("lane:")
+        ? overId.slice("lane:".length)
+        : overId.startsWith("project:")
+          ? containerKeyOf(overId.slice("project:".length))
+          : overId.startsWith("container:")
+            ? overId.slice("container:".length)
+            : null;
+      if (!overLaneId || overLaneId === UNASSIGNED) return;
+
       const oldIndex = lanes.findIndex((l) => `lane:${l.id}` === activeId);
-      const newIndex = lanes.findIndex((l) => `lane:${l.id}` === overId);
+      const newIndex = lanes.findIndex((l) => l.id === overLaneId);
       if (oldIndex === -1 || newIndex === -1) return;
 
       const reordered = arrayMove(lanes, oldIndex, newIndex);
@@ -136,6 +144,9 @@ export function ProjectBoard({
         destIndex = projectsByLane[destKey].findIndex(
           (p) => p.id === overProjectId,
         );
+      } else if (overId.startsWith("lane:")) {
+        destKey = overId.slice("lane:".length);
+        destIndex = (projectsByLane[destKey] ?? []).length;
       } else {
         return;
       }
