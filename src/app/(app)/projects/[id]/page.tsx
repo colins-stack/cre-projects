@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { StatusBadge } from "@/components/status-badge";
+import { ProjectHeader } from "@/components/project-header";
 import { ProjectDocLinks } from "@/components/project-doc-links";
 import { ProjectLanePicker } from "@/components/project-lane-picker";
 import { TaskManager } from "@/components/task-manager";
@@ -31,18 +31,9 @@ export default async function ProjectDetailPage({
 
   return (
     <div>
+      <ProjectHeader project={typedProject} />
+
       <div className="mb-6">
-        <div className="mb-2 flex items-center gap-3">
-          <h1 className="text-xl font-semibold text-gray-900">
-            {typedProject.name}
-          </h1>
-          <StatusBadge status={typedProject.status} />
-        </div>
-        {typedProject.description && (
-          <p className="mb-3 text-sm text-gray-600">
-            {typedProject.description}
-          </p>
-        )}
         <div className="mb-3">
           <ProjectLanePicker
             projectId={typedProject.id}
