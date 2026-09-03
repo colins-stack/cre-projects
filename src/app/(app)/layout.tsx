@@ -12,7 +12,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
         <SettingsLink />
       </aside>
-      <main className="flex-1 p-8">
+      <main className="min-w-0 flex-1 p-8">
         <div className="mx-auto max-w-4xl">{children}</div>
       </main>
     </div>

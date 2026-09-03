@@ -51,7 +51,7 @@ export function LaneHeader({ lane }: { lane: Lane }) {
 
   if (editing) {
     return (
-      <form onSubmit={handleRename} className="mb-3 flex items-center gap-2">
+      <form onSubmit={handleRename} className="mb-3 flex flex-wrap items-center gap-2">
         <input
           autoFocus
           required
@@ -82,7 +82,7 @@ export function LaneHeader({ lane }: { lane: Lane }) {
   }
 
   return (
-    <div className="mb-3 flex items-center gap-3">
+    <div className="mb-3 flex flex-wrap items-center gap-3">
       <h2 className="text-sm font-semibold text-gray-900">{lane.name}</h2>
       <button
         onClick={() => setEditing(true)}

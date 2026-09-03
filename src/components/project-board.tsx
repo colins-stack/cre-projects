@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   DndContext,
@@ -20,6 +20,7 @@ import {
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
+  horizontalListSortingStrategy,
   rectSortingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
@@ -35,6 +36,9 @@ type ProgressMap = Record<string, { done: number; total: number }>;
 type ProjectsByLane = Record<string, Project[]>;
 
 const UNASSIGNED = "unassigned";
+const LAYOUT_STORAGE_KEY = "projectBoardLayout";
+
+type BoardLayout = "horizontal" | "vertical";
 
 const dropAnimation: DropAnimation = {
   duration: 200,
@@ -57,6 +61,20 @@ export function ProjectBoard({
   const [lanes, setLanes] = useState(initialLanes);
   const [projectsByLane, setProjectsByLane] = useState(initialProjectsByLane);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [layout, setLayout] = useState<BoardLayout>("horizontal");
+
+  useEffect(() => {
+    const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
+    if (stored === "horizontal" || stored === "vertical") setLayout(stored);
+  }, []);
+
+  function toggleLayout() {
+    setLayout((prev) => {
+      const next = prev === "horizontal" ? "vertical" : "horizontal";
+      localStorage.setItem(LAYOUT_STORAGE_KEY, next);
+      return next;
+    });
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -200,10 +218,24 @@ export function ProjectBoard({
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveId(null)}
     >
-      <div className="space-y-8">
+      <div className="mb-3 flex justify-end">
+        <LayoutToggle layout={layout} onToggle={toggleLayout} />
+      </div>
+
+      <div
+        className={
+          layout === "horizontal"
+            ? "flex items-start gap-4 overflow-x-auto pb-4"
+            : "space-y-8"
+        }
+      >
         <SortableContext
           items={lanes.map((l) => `lane:${l.id}`)}
-          strategy={verticalListSortingStrategy}
+          strategy={
+            layout === "horizontal"
+              ? horizontalListSortingStrategy
+              : verticalListSortingStrategy
+          }
         >
           {lanes.map((lane) => (
             <LaneSection
@@ -212,15 +244,25 @@ export function ProjectBoard({
               projects={projectsByLane[lane.id] ?? []}
               progressByProject={progressByProject}
               dndEnabled={dndEnabled}
+              layout={layout}
             />
           ))}
         </SortableContext>
 
-        <div>
+        <div
+          className={`rounded-xl border border-transparent p-4 ${
+            layout === "horizontal" ? "w-72 shrink-0" : ""
+          }`}
+        >
           {lanes.length > 0 && (
-            <h2 className="mb-3 text-sm font-semibold text-gray-900">
-              Unassigned
-            </h2>
+            <div className="mb-3 flex items-center gap-2">
+              {dndEnabled && (
+                <span className="h-4 w-4 shrink-0" aria-hidden="true" />
+              )}
+              <h2 className="text-sm font-semibold text-gray-900">
+                Unassigned
+              </h2>
+            </div>
           )}
           <ProjectDropZone
             containerKey={UNASSIGNED}
@@ -228,13 +270,18 @@ export function ProjectBoard({
             progressByProject={progressByProject}
             dndEnabled={dndEnabled}
             emptyText="No unassigned projects."
+            layout={layout}
           />
         </div>
       </div>
 
       <DragOverlay dropAnimation={dropAnimation}>
         {activeLane ? (
-          <div className="rotate-1 scale-[1.02] rounded-xl border border-gray-200 bg-surface p-4 shadow-xl">
+          <div
+            className={`rotate-1 scale-[1.02] rounded-xl border border-gray-200 bg-surface p-4 shadow-xl ${
+              layout === "horizontal" ? "w-72" : ""
+            }`}
+          >
             <div className="mb-3 flex items-center gap-2">
               <span className="text-gray-400">
                 <GripIcon />
@@ -246,6 +293,7 @@ export function ProjectBoard({
             <LaneOverlayProjects
               projects={projectsByLane[activeLane.id] ?? []}
               progressByProject={progressByProject}
+              layout={layout}
             />
           </div>
         ) : activeProject ? (
@@ -261,16 +309,65 @@ export function ProjectBoard({
   );
 }
 
+function LayoutToggle({
+  layout,
+  onToggle,
+}: {
+  layout: BoardLayout;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      onClick={onToggle}
+      aria-label={
+        layout === "horizontal"
+          ? "Switch to vertical layout"
+          : "Switch to horizontal layout"
+      }
+      title={
+        layout === "horizontal"
+          ? "Switch to vertical layout"
+          : "Switch to horizontal layout"
+      }
+      className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-2 py-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+    >
+      {layout === "horizontal" ? <ColumnsIcon /> : <RowsIcon />}
+    </button>
+  );
+}
+
+function ColumnsIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+      <rect x="2" y="3" width="4" height="14" rx="1" />
+      <rect x="8" y="3" width="4" height="14" rx="1" />
+      <rect x="14" y="3" width="4" height="14" rx="1" />
+    </svg>
+  );
+}
+
+function RowsIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+      <rect x="2" y="2" width="16" height="4" rx="1" />
+      <rect x="2" y="8" width="16" height="4" rx="1" />
+      <rect x="2" y="14" width="16" height="4" rx="1" />
+    </svg>
+  );
+}
+
 function LaneSection({
   lane,
   projects,
   progressByProject,
   dndEnabled,
+  layout,
 }: {
   lane: Lane;
   projects: Project[];
   progressByProject: ProgressMap;
   dndEnabled: boolean;
+  layout: BoardLayout;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({
@@ -289,6 +386,8 @@ function LaneSection({
       ref={setNodeRef}
       style={style}
       className={`rounded-xl border p-4 transition-colors ${
+        layout === "horizontal" ? "w-72 shrink-0" : ""
+      } ${
         isDragging ? "border-dashed border-gray-300 bg-gray-50" : "border-transparent"
       }`}
     >
@@ -312,6 +411,7 @@ function LaneSection({
           progressByProject={progressByProject}
           dndEnabled={dndEnabled}
           emptyText="No projects in this lane yet."
+          layout={layout}
         />
       </div>
     </div>
@@ -324,12 +424,14 @@ function ProjectDropZone({
   progressByProject,
   dndEnabled,
   emptyText,
+  layout,
 }: {
   containerKey: string;
   projects: Project[];
   progressByProject: ProgressMap;
   dndEnabled: boolean;
   emptyText: string;
+  layout: BoardLayout;
 }) {
   const { setNodeRef } = useDroppable({
     id: `container:${containerKey}`,
@@ -339,13 +441,21 @@ function ProjectDropZone({
   return (
     <SortableContext
       items={projects.map((p) => `project:${p.id}`)}
-      strategy={rectSortingStrategy}
+      strategy={
+        layout === "horizontal" ? verticalListSortingStrategy : rectSortingStrategy
+      }
     >
       <div ref={setNodeRef} className="min-h-12">
         {projects.length === 0 ? (
           <p className="text-sm text-gray-500">{emptyText}</p>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div
+            className={
+              layout === "horizontal"
+                ? "flex flex-col gap-3"
+                : "grid gap-4 sm:grid-cols-2"
+            }
+          >
             {projects.map((project) => (
               <SortableProjectCard
                 key={project.id}
@@ -412,16 +522,22 @@ function SortableProjectCard({
 function LaneOverlayProjects({
   projects,
   progressByProject,
+  layout,
 }: {
   projects: Project[];
   progressByProject: ProgressMap;
+  layout: BoardLayout;
 }) {
   if (projects.length === 0) {
     return <p className="text-sm text-gray-500">No projects in this lane yet.</p>;
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div
+      className={
+        layout === "horizontal" ? "flex flex-col gap-3" : "grid gap-4 sm:grid-cols-2"
+      }
+    >
       {projects.map((project) => (
         <div
           key={project.id}
