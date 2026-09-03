@@ -27,6 +27,7 @@ export interface Project {
   doc_links: DocLink[];
   lane_id: string | null;
   position: number;
+  assignee: string | null;
   created_at: string;
 }
 
@@ -45,4 +46,14 @@ export interface Task {
 
 export interface TaskWithProject extends Task {
   projects: { name: string } | null;
+}
+
+export interface Subtask {
+  id: string;
+  task_id: string;
+  title: string;
+  done: boolean;
+  assignee: string | null;
+  position: number;
+  created_at: string;
 }

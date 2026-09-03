@@ -28,6 +28,7 @@ export function NewProjectForm({
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<ProjectStatus>("future");
   const [laneId, setLaneId] = useState("");
+  const [assignee, setAssignee] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -41,6 +42,7 @@ export function NewProjectForm({
       description: description || null,
       status,
       lane_id: laneId || null,
+      assignee: assignee || null,
       position: projectCountByLane[laneId || "unassigned"] ?? 0,
     });
 
@@ -55,6 +57,7 @@ export function NewProjectForm({
     setDescription("");
     setStatus("future");
     setLaneId("");
+    setAssignee("");
     setOpen(false);
     router.refresh();
   }
@@ -133,6 +136,18 @@ export function NewProjectForm({
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Assignee
+          </label>
+          <input
+            placeholder="Name or Both"
+            value={assignee}
+            onChange={(e) => setAssignee(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
+          />
         </div>
       </div>
 

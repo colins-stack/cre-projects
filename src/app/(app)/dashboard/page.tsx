@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/status-badge";
 import type { TaskWithProject } from "@/lib/types";
@@ -122,7 +123,10 @@ function TaskList({
         <ul className="space-y-3">
           {tasks.map((task) => (
             <li key={task.id} className="text-sm">
-              <div className="flex items-start justify-between gap-2">
+              <Link
+                href={`/tasks/${task.id}`}
+                className="-m-2 flex items-start justify-between gap-2 rounded-lg p-2 hover:bg-gray-50"
+              >
                 <div>
                   <p className="font-medium text-gray-900">{task.title}</p>
                   <p className="text-xs text-gray-500">
@@ -131,7 +135,7 @@ function TaskList({
                   </p>
                 </div>
                 <StatusBadge status={task.status} />
-              </div>
+              </Link>
             </li>
           ))}
         </ul>

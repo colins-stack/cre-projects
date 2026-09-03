@@ -63,8 +63,30 @@ export function ProjectBoard({
   const [activeId, setActiveId] = useState<string | null>(null);
   const [layout, setLayout] = useState<BoardLayout>("horizontal");
 
+  // Re-sync local state whenever the server sends fresh data (e.g. after
+  // router.refresh() from adding/editing a project or lane) — otherwise this
+  // component keeps its stale initial state since useState only reads its
+  // argument on first mount. Adjusting state during render (rather than in
+  // an effect) avoids an extra commit/flash of stale data.
+  const [prevInitialLanes, setPrevInitialLanes] = useState(initialLanes);
+  if (initialLanes !== prevInitialLanes) {
+    setPrevInitialLanes(initialLanes);
+    setLanes(initialLanes);
+  }
+
+  const [prevInitialProjectsByLane, setPrevInitialProjectsByLane] =
+    useState(initialProjectsByLane);
+  if (initialProjectsByLane !== prevInitialProjectsByLane) {
+    setPrevInitialProjectsByLane(initialProjectsByLane);
+    setProjectsByLane(initialProjectsByLane);
+  }
+
   useEffect(() => {
+    // One-time read from an external system (localStorage) on mount, not a
+    // derived-from-props sync — can't be done in the initializer since
+    // localStorage isn't available during server rendering.
     const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (stored === "horizontal" || stored === "vertical") setLayout(stored);
   }, []);
 
@@ -560,6 +582,11 @@ function ProjectCardContent({
   project: Project;
   progress: { done: number; total: number } | undefined;
 }) {
+  const pct =
+    progress && progress.total > 0
+      ? Math.round((progress.done / progress.total) * 100)
+      : 0;
+
   return (
     <>
       <Link href={`/projects/${project.id}`} className="block">
@@ -572,11 +599,25 @@ function ProjectCardContent({
           <p className="mb-3 text-sm text-gray-600">{project.description}</p>
         )}
 
-        <p className="mb-3 text-xs text-gray-500">
-          {progress
-            ? `${progress.done}/${progress.total} done`
-            : "No tasks yet"}
-        </p>
+        {project.assignee && (
+          <p className="mb-2 text-xs text-gray-500">
+            Assigned to {project.assignee}
+          </p>
+        )}
+
+        <div className="mb-1 flex items-center justify-between text-xs text-gray-500">
+          <span>{progress ? `${progress.done}/${progress.total} done` : "No tasks yet"}</span>
+          {progress && progress.total > 0 && <span>{pct}%</span>}
+        </div>
+        {progress && progress.total > 0 && (
+          <div className="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-gray-200">
+            <div
+              className="h-full rounded-full bg-accent-500 transition-all"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+        )}
+        {(!progress || progress.total === 0) && <div className="mb-3" />}
       </Link>
 
       <DocLinkChips links={project.doc_links ?? []} />

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { DocLinkChips } from "@/components/doc-link-chips";
 import { DocLinkEditor } from "@/components/doc-link-editor";
+import { TaskStatusControl } from "@/components/task-status-control";
 import type { DocLink, Task, TaskStatus } from "@/lib/types";
 
 const STATUSES: TaskStatus[] = ["todo", "inprogress", "blocked", "done"];
@@ -312,7 +313,13 @@ function TaskRow({
       <li className="rounded-xl border border-gray-200 bg-surface p-4 shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="font-medium text-gray-900">{task.title}</p>
+            <p
+              className={`font-medium text-gray-900 ${
+                task.status === "done" ? "line-through text-gray-500" : ""
+              }`}
+            >
+              {task.title}
+            </p>
             <p className="mt-0.5 text-xs text-gray-500">
               {showProject && projectName ? `${projectName} · ` : ""}
               {task.due_date ? `Due ${task.due_date}` : "No due date"}
@@ -325,19 +332,10 @@ function TaskRow({
             )}
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <select
-              value={task.status}
-              onChange={(e) =>
-                handleStatusChange(e.target.value as TaskStatus)
-              }
-              className="rounded-lg border border-gray-300 px-2 py-1 text-xs focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
-            >
-              {STATUSES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
+            <TaskStatusControl
+              status={task.status}
+              onChange={handleStatusChange}
+            />
             <button
               onClick={() => setEditing(true)}
               className="text-xs font-medium text-gray-500 hover:text-gray-700"

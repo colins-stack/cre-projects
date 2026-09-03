@@ -22,6 +22,7 @@ export function ProjectHeader({ project }: { project: Project }) {
   const [name, setName] = useState(project.name);
   const [description, setDescription] = useState(project.description ?? "");
   const [status, setStatus] = useState<ProjectStatus>(project.status);
+  const [assignee, setAssignee] = useState(project.assignee ?? "");
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -34,7 +35,12 @@ export function ProjectHeader({ project }: { project: Project }) {
 
     const { error } = await supabase
       .from("projects")
-      .update({ name, description: description || null, status })
+      .update({
+        name,
+        description: description || null,
+        status,
+        assignee: assignee || null,
+      })
       .eq("id", project.id);
 
     setSaving(false);
@@ -114,6 +120,18 @@ export function ProjectHeader({ project }: { project: Project }) {
           </select>
         </div>
 
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Assignee
+          </label>
+          <input
+            placeholder="Name or Both"
+            value={assignee}
+            onChange={(e) => setAssignee(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
+          />
+        </div>
+
         {error && <p className="text-sm text-red-600">{error}</p>}
 
         <div className="flex gap-2">
@@ -131,6 +149,7 @@ export function ProjectHeader({ project }: { project: Project }) {
               setName(project.name);
               setDescription(project.description ?? "");
               setStatus(project.status);
+              setAssignee(project.assignee ?? "");
               setError(null);
             }}
             className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -186,6 +205,10 @@ export function ProjectHeader({ project }: { project: Project }) {
 
       {project.description && (
         <p className="mb-1 text-sm text-gray-600">{project.description}</p>
+      )}
+
+      {project.assignee && (
+        <p className="text-sm text-gray-500">Assigned to {project.assignee}</p>
       )}
 
       {error && <p className="text-xs text-red-600">{error}</p>}
