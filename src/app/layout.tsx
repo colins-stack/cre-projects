@@ -10,7 +10,7 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Project Ledger",
+  title: "Projects",
   description: "Team project & task tracker",
 };
 
