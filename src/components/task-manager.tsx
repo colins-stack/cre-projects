@@ -250,6 +250,8 @@ function TaskRow({
   const [projectIdField, setProjectIdField] = useState(task.project_id ?? "");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Optimistic status: reflects clicks instantly instead of waiting on the
   // round trip to Supabase + router.refresh(). Re-synced from the prop
@@ -322,6 +324,18 @@ function TaskRow({
     return { error: error?.message ?? null };
   }
 
+  async function handleDelete() {
+    setDeleting(true);
+    const { error } = await supabase.from("tasks").delete().eq("id", task.id);
+    setDeleting(false);
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    router.refresh();
+  }
+
   if (!editing) {
     return (
       <li className="rounded-xl border border-gray-200 bg-surface p-4 shadow-sm">
@@ -353,8 +367,33 @@ function TaskRow({
             >
               Edit
             </button>
+            {confirmingDelete ? (
+              <span className="flex items-center gap-2 text-xs">
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="font-medium text-red-600 hover:text-red-700"
+                >
+                  {deleting ? "Deleting…" : "Confirm"}
+                </button>
+                <button
+                  onClick={() => setConfirmingDelete(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  Cancel
+                </button>
+              </span>
+            ) : (
+              <button
+                onClick={() => setConfirmingDelete(true)}
+                className="text-xs font-medium text-gray-500 hover:text-gray-700"
+              >
+                Delete
+              </button>
+            )}
           </div>
         </div>
+        {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
       </li>
     );
   }
