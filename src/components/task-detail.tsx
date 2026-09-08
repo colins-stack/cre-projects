@@ -19,6 +19,17 @@ export function TaskDetail({ task }: { task: Task }) {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // Optimistic status: reflects clicks instantly instead of waiting on the
+  // round trip to Supabase + router.refresh(). Re-synced from the prop
+  // (adjusted during render, not in an effect) whenever the server sends a
+  // fresh value.
+  const [status, setStatus] = useState(task.status);
+  const [prevTaskStatus, setPrevTaskStatus] = useState(task.status);
+  if (task.status !== prevTaskStatus) {
+    setPrevTaskStatus(task.status);
+    setStatus(task.status);
+  }
+
   async function updateFields(fields: Record<string, unknown>) {
     const completed_at =
       fields.status === "done"
@@ -43,8 +54,11 @@ export function TaskDetail({ task }: { task: Task }) {
     return true;
   }
 
-  async function handleStatusChange(status: TaskStatus) {
-    await updateFields({ status });
+  async function handleStatusChange(newStatus: TaskStatus) {
+    const previous = status;
+    setStatus(newStatus);
+    const ok = await updateFields({ status: newStatus });
+    if (!ok) setStatus(previous);
   }
 
   async function handleSave(e: React.FormEvent) {
@@ -151,16 +165,13 @@ export function TaskDetail({ task }: { task: Task }) {
           <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
             <h1
               className={`text-lg font-semibold text-gray-900 ${
-                task.status === "done" ? "text-gray-500 line-through" : ""
+                status === "done" ? "text-gray-500 line-through" : ""
               }`}
             >
               {task.title}
             </h1>
             <div className="flex shrink-0 items-center gap-3">
-              <TaskStatusControl
-                status={task.status}
-                onChange={handleStatusChange}
-              />
+              <TaskStatusControl status={status} onChange={handleStatusChange} />
               <button
                 onClick={() => setEditing(true)}
                 className="text-xs font-medium text-gray-500 hover:text-gray-700"
