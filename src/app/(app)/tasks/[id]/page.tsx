@@ -35,7 +35,7 @@ export default async function TaskDetailPage({
   const typedTask = task as TaskWithProjectRef;
 
   return (
-    <div>
+    <div className="mx-auto max-w-4xl">
       <Link
         href={typedTask.projects ? `/projects/${typedTask.projects.id}` : "/tasks"}
         className="mb-4 inline-block text-xs font-medium text-gray-500 hover:text-gray-700"

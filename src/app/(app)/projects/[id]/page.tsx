@@ -30,7 +30,7 @@ export default async function ProjectDetailPage({
   const typedProject = project as Project;
 
   return (
-    <div>
+    <div className="mx-auto max-w-4xl">
       <ProjectHeader project={typedProject} />
 
       <div className="mb-6">

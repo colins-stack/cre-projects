@@ -475,7 +475,7 @@ function ProjectDropZone({
             className={
               layout === "horizontal"
                 ? "flex flex-col gap-3"
-                : "grid gap-4 sm:grid-cols-2"
+                : "grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4"
             }
           >
             {projects.map((project) => (
@@ -557,7 +557,9 @@ function LaneOverlayProjects({
   return (
     <div
       className={
-        layout === "horizontal" ? "flex flex-col gap-3" : "grid gap-4 sm:grid-cols-2"
+        layout === "horizontal"
+          ? "flex flex-col gap-3"
+          : "grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4"
       }
     >
       {projects.map((project) => (

@@ -28,7 +28,7 @@ export default async function TasksPage({
   ) as string[];
 
   return (
-    <div>
+    <div className="mx-auto max-w-4xl">
       <h1 className="mb-6 text-xl font-semibold text-gray-900">Tasks</h1>
 
       <TaskFilters projects={projects ?? []} assignees={assignees} />
