@@ -1,22 +1,68 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/status-badge";
-import type { TaskWithProject } from "@/lib/types";
+import type { Profile, TaskWithProject } from "@/lib/types";
+
+type Filter = "mine" | "all";
 
 function toDateOnly(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
-export default async function DashboardPage() {
+function resolveFilter(value: string | undefined): Filter {
+  return value === "all" ? "all" : "mine";
+}
+
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ needsAttention?: string; upcoming?: string }>;
+}) {
+  const { needsAttention: naParam, upcoming: upParam } = await searchParams;
+  const naFilter = resolveFilter(naParam);
+  const upFilter = resolveFilter(upParam);
+
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const { data: profile } = user
+    ? await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle()
+    : { data: null };
+  const displayName = (profile as Profile | null)?.display_name;
+
   const now = new Date();
   const today = toDateOnly(now);
   const in7Days = toDateOnly(new Date(now.getTime() + 7 * 86400000));
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 86400000).toISOString();
+
+  let needsAttentionQuery = supabase
+    .from("tasks")
+    .select("*, projects(name)")
+    .or(`status.eq.blocked,and(due_date.lt.${today},status.neq.done)`)
+    .order("due_date", { ascending: true, nullsFirst: false })
+    .limit(10);
+  if (naFilter === "mine" && displayName) {
+    needsAttentionQuery = needsAttentionQuery.contains("assignees", [
+      displayName,
+    ]);
+  }
+
+  let upcomingQuery = supabase
+    .from("tasks")
+    .select("*, projects(name)")
+    .neq("status", "done")
+    .gte("due_date", today)
+    .order("due_date", { ascending: true })
+    .limit(5);
+  if (upFilter === "mine" && displayName) {
+    upcomingQuery = upcomingQuery.contains("assignees", [displayName]);
+  }
 
   const [
     { count: activeProjects },
@@ -46,19 +92,8 @@ export default async function DashboardPage() {
       .select("id", { count: "exact", head: true })
       .eq("status", "done")
       .gte("completed_at", thirtyDaysAgo),
-    supabase
-      .from("tasks")
-      .select("*, projects(name)")
-      .or(`status.eq.blocked,and(due_date.lt.${today},status.neq.done)`)
-      .order("due_date", { ascending: true, nullsFirst: false })
-      .limit(10),
-    supabase
-      .from("tasks")
-      .select("*, projects(name)")
-      .neq("status", "done")
-      .gte("due_date", today)
-      .order("due_date", { ascending: true })
-      .limit(5),
+    needsAttentionQuery,
+    upcomingQuery,
   ]);
 
   const stats = [
@@ -67,6 +102,16 @@ export default async function DashboardPage() {
     { label: "Overdue", value: overdue ?? 0 },
     { label: "Completed (last 30 days)", value: completedRecently ?? 0 },
   ];
+
+  const noNameHint = (
+    <>
+      Set your name in{" "}
+      <Link href="/settings" className="text-accent-600 hover:underline">
+        Settings
+      </Link>{" "}
+      to filter by mine.
+    </>
+  );
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -92,16 +137,73 @@ export default async function DashboardPage() {
       <div className="grid gap-6 sm:grid-cols-2">
         <TaskList
           title="Needs Attention"
-          emptyText="Nothing blocked or overdue."
+          emptyText={
+            naFilter === "mine" && !displayName
+              ? noNameHint
+              : "Nothing blocked or overdue."
+          }
           tasks={(needsAttention as TaskWithProject[] | null) ?? []}
+          toggle={
+            <MineAllToggle
+              current={naFilter}
+              mineHref={`/dashboard?needsAttention=mine&upcoming=${upFilter}`}
+              allHref={`/dashboard?needsAttention=all&upcoming=${upFilter}`}
+            />
+          }
         />
         <TaskList
           title="Upcoming"
-          emptyText="No upcoming tasks with a due date."
+          emptyText={
+            upFilter === "mine" && !displayName
+              ? noNameHint
+              : "No upcoming tasks with a due date."
+          }
           tasks={(upcoming as TaskWithProject[] | null) ?? []}
           seeAllHref="/tasks/upcoming"
+          toggle={
+            <MineAllToggle
+              current={upFilter}
+              mineHref={`/dashboard?needsAttention=${naFilter}&upcoming=mine`}
+              allHref={`/dashboard?needsAttention=${naFilter}&upcoming=all`}
+            />
+          }
         />
       </div>
+    </div>
+  );
+}
+
+function MineAllToggle({
+  current,
+  mineHref,
+  allHref,
+}: {
+  current: Filter;
+  mineHref: string;
+  allHref: string;
+}) {
+  return (
+    <div className="inline-flex overflow-hidden rounded-full border border-gray-200">
+      <Link
+        href={mineHref}
+        className={`px-2 py-0.5 text-xs font-medium transition-colors ${
+          current === "mine"
+            ? "bg-accent-600 text-white"
+            : "bg-surface text-gray-500 hover:bg-gray-100"
+        }`}
+      >
+        Mine
+      </Link>
+      <Link
+        href={allHref}
+        className={`border-l border-gray-200 px-2 py-0.5 text-xs font-medium transition-colors ${
+          current === "all"
+            ? "bg-accent-600 text-white"
+            : "bg-surface text-gray-500 hover:bg-gray-100"
+        }`}
+      >
+        All
+      </Link>
     </div>
   );
 }
@@ -111,15 +213,20 @@ function TaskList({
   emptyText,
   tasks,
   seeAllHref,
+  toggle,
 }: {
   title: string;
-  emptyText: string;
+  emptyText: React.ReactNode;
   tasks: TaskWithProject[];
   seeAllHref?: string;
+  toggle?: React.ReactNode;
 }) {
   return (
     <div className="rounded-xl border border-gray-200 bg-surface p-5 shadow-sm">
-      <h2 className="mb-3 text-sm font-semibold text-gray-900">{title}</h2>
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
+        {toggle}
+      </div>
       {tasks.length === 0 ? (
         <p className="text-sm text-gray-500">{emptyText}</p>
       ) : (
