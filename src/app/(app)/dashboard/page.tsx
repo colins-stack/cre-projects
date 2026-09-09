@@ -58,7 +58,7 @@ export default async function DashboardPage() {
       .neq("status", "done")
       .gte("due_date", today)
       .order("due_date", { ascending: true })
-      .limit(10),
+      .limit(5),
   ]);
 
   const stats = [
@@ -99,6 +99,7 @@ export default async function DashboardPage() {
           title="Upcoming"
           emptyText="No upcoming tasks with a due date."
           tasks={(upcoming as TaskWithProject[] | null) ?? []}
+          seeAllHref="/tasks/upcoming"
         />
       </div>
     </div>
@@ -109,10 +110,12 @@ function TaskList({
   title,
   emptyText,
   tasks,
+  seeAllHref,
 }: {
   title: string;
   emptyText: string;
   tasks: TaskWithProject[];
+  seeAllHref?: string;
 }) {
   return (
     <div className="rounded-xl border border-gray-200 bg-surface p-5 shadow-sm">
@@ -139,6 +142,14 @@ function TaskList({
             </li>
           ))}
         </ul>
+      )}
+      {seeAllHref && (
+        <Link
+          href={seeAllHref}
+          className="mt-3 inline-block text-xs font-medium text-accent-600 hover:text-accent-700"
+        >
+          See all →
+        </Link>
       )}
     </div>
   );
