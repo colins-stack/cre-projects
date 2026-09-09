@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+const TEAM_MEMBERS = ["Colin", "Jordyn"];
+
 export function AssigneeEditor({
   value,
   onChange,
@@ -9,64 +11,75 @@ export function AssigneeEditor({
   value: string[];
   onChange: (assignees: string[]) => void;
 }) {
-  const [draft, setDraft] = useState("");
+  const otherValue = value.find((v) => !TEAM_MEMBERS.includes(v)) ?? "";
+  const [showOther, setShowOther] = useState(otherValue !== "");
 
-  function addDraft() {
-    const name = draft.trim();
-    setDraft("");
-    if (!name || value.includes(name)) return;
-    onChange([...value, name]);
+  function toggleMember(name: string) {
+    onChange(
+      value.includes(name)
+        ? value.filter((v) => v !== name)
+        : [...value, name],
+    );
   }
 
-  function removeAt(name: string) {
-    onChange(value.filter((v) => v !== name));
+  function toggleOther() {
+    if (showOther) {
+      setShowOther(false);
+      if (otherValue) onChange(value.filter((v) => v !== otherValue));
+    } else {
+      setShowOther(true);
+    }
+  }
+
+  function handleOtherChange(text: string) {
+    const withoutOther = value.filter((v) => v !== otherValue);
+    onChange(text ? [...withoutOther, text] : withoutOther);
   }
 
   return (
     <div>
-      <div className="mb-1.5 flex flex-wrap gap-1.5">
-        {value.length === 0 ? (
-          <span className="text-xs text-gray-500">Unassigned</span>
-        ) : (
-          value.map((name) => (
-            <span
+      <div className="flex flex-wrap gap-1.5">
+        {TEAM_MEMBERS.map((name) => {
+          const active = value.includes(name);
+          return (
+            <button
               key={name}
-              className="inline-flex items-center gap-1 rounded-full bg-gray-200 px-2 py-0.5 text-xs text-gray-700"
+              type="button"
+              onClick={() => toggleMember(name)}
+              aria-pressed={active}
+              className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
+                active
+                  ? "border-accent-600 bg-accent-600 text-white"
+                  : "border-gray-300 bg-surface text-gray-700 hover:bg-gray-100"
+              }`}
             >
               {name}
-              <button
-                type="button"
-                onClick={() => removeAt(name)}
-                aria-label={`Remove ${name}`}
-                className="text-gray-500 hover:text-red-600"
-              >
-                ×
-              </button>
-            </span>
-          ))
-        )}
-      </div>
-      <div className="flex gap-1.5">
-        <input
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              addDraft();
-            }
-          }}
-          placeholder="Add a name, press Enter"
-          className="min-w-0 flex-1 rounded-lg border border-gray-300 px-2 py-1 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
-        />
+            </button>
+          );
+        })}
         <button
           type="button"
-          onClick={addDraft}
-          className="rounded-lg border border-gray-300 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100"
+          onClick={toggleOther}
+          aria-pressed={showOther}
+          className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
+            showOther
+              ? "border-accent-600 bg-accent-600 text-white"
+              : "border-gray-300 bg-surface text-gray-700 hover:bg-gray-100"
+          }`}
         >
-          Add
+          Other
         </button>
       </div>
+
+      {showOther && (
+        <input
+          autoFocus
+          value={otherValue}
+          onChange={(e) => handleOtherChange(e.target.value)}
+          placeholder="Name"
+          className="mt-2 w-full rounded-lg border border-gray-300 px-2 py-1 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
+        />
+      )}
     </div>
   );
 }
