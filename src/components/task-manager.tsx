@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { DocLinkChips } from "@/components/doc-link-chips";
@@ -341,13 +342,14 @@ function TaskRow({
       <li className="rounded-xl border border-gray-200 bg-surface p-4 shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p
-              className={`font-medium text-gray-900 ${
+            <Link
+              href={`/tasks/${task.id}`}
+              className={`font-medium text-gray-900 hover:underline ${
                 status === "done" ? "line-through text-gray-500" : ""
               }`}
             >
               {task.title}
-            </p>
+            </Link>
             <p className="mt-0.5 text-xs text-gray-500">
               {showProject && projectName ? `${projectName} · ` : ""}
               {task.due_date ? `Due ${task.due_date}` : "No due date"}

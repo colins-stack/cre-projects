@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Checkbox } from "@/components/checkbox";
 import type { Subtask } from "@/lib/types";
 
 export function SubtaskList({
@@ -20,8 +21,24 @@ export function SubtaskList({
   const [adding, setAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Optimistic list: reflects a checkbox click instantly instead of waiting
+  // on the round trip to Supabase + router.refresh(). Re-synced from the
+  // prop (adjusted during render, not in an effect) whenever the server
+  // sends a fresh value.
+  const [items, setItems] = useState(subtasks);
+  const [prevSubtasks, setPrevSubtasks] = useState(subtasks);
+  if (subtasks !== prevSubtasks) {
+    setPrevSubtasks(subtasks);
+    setItems(subtasks);
+  }
+
   async function handleToggle(subtask: Subtask) {
     setError(null);
+    const previousItems = items;
+    setItems((prev) =>
+      prev.map((s) => (s.id === subtask.id ? { ...s, done: !s.done } : s)),
+    );
+
     const { error } = await supabase
       .from("subtasks")
       .update({ done: !subtask.done })
@@ -29,6 +46,7 @@ export function SubtaskList({
 
     if (error) {
       setError(error.message);
+      setItems(previousItems);
       return;
     }
     router.refresh();
@@ -54,7 +72,7 @@ export function SubtaskList({
       task_id: taskId,
       title,
       assignee: assignee || null,
-      position: subtasks.length,
+      position: items.length,
     });
 
     setAdding(false);
@@ -71,23 +89,19 @@ export function SubtaskList({
 
   return (
     <div className="space-y-3">
-      {subtasks.length === 0 ? (
+      {items.length === 0 ? (
         <p className="text-sm text-gray-500">No subtasks yet.</p>
       ) : (
         <ul className="space-y-1.5">
-          {subtasks.map((subtask) => (
+          {items.map((subtask) => (
             <li
               key={subtask.id}
               className="flex items-center gap-2 rounded-lg border border-gray-200 bg-surface px-3 py-2"
             >
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={subtask.done}
                 onChange={() => handleToggle(subtask)}
-                aria-label={
-                  subtask.done ? "Mark as not done" : "Mark as done"
-                }
-                className="h-4 w-4 rounded border-gray-300 text-accent-600 focus:ring-2 focus:ring-accent-100"
+                ariaLabel={subtask.done ? "Mark as not done" : "Mark as done"}
               />
               <span
                 className={`min-w-0 flex-1 truncate text-sm ${
