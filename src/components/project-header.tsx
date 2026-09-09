@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { AssigneeEditor } from "@/components/assignee-editor";
 import { StatusBadge } from "@/components/status-badge";
 import type { Project, ProjectStatus } from "@/lib/types";
 
@@ -22,7 +23,7 @@ export function ProjectHeader({ project }: { project: Project }) {
   const [name, setName] = useState(project.name);
   const [description, setDescription] = useState(project.description ?? "");
   const [status, setStatus] = useState<ProjectStatus>(project.status);
-  const [assignee, setAssignee] = useState(project.assignee ?? "");
+  const [assignees, setAssignees] = useState(project.assignees);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -39,7 +40,7 @@ export function ProjectHeader({ project }: { project: Project }) {
         name,
         description: description || null,
         status,
-        assignee: assignee || null,
+        assignees,
       })
       .eq("id", project.id);
 
@@ -122,14 +123,9 @@ export function ProjectHeader({ project }: { project: Project }) {
 
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
-            Assignee
+            Assignees
           </label>
-          <input
-            placeholder="Name or Both"
-            value={assignee}
-            onChange={(e) => setAssignee(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
-          />
+          <AssigneeEditor value={assignees} onChange={setAssignees} />
         </div>
 
         {error && <p className="text-sm text-red-600">{error}</p>}
@@ -149,7 +145,7 @@ export function ProjectHeader({ project }: { project: Project }) {
               setName(project.name);
               setDescription(project.description ?? "");
               setStatus(project.status);
-              setAssignee(project.assignee ?? "");
+              setAssignees(project.assignees);
               setError(null);
             }}
             className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -207,8 +203,10 @@ export function ProjectHeader({ project }: { project: Project }) {
         <p className="mb-1 text-sm text-gray-600">{project.description}</p>
       )}
 
-      {project.assignee && (
-        <p className="text-sm text-gray-500">Assigned to {project.assignee}</p>
+      {project.assignees.length > 0 && (
+        <p className="text-sm text-gray-500">
+          Assigned to {project.assignees.join(", ")}
+        </p>
       )}
 
       {error && <p className="text-xs text-red-600">{error}</p>}

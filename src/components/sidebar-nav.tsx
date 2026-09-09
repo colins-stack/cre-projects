@@ -7,7 +7,7 @@ const LINKS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/projects", label: "Projects" },
   { href: "/tasks", label: "Tasks" },
-  { href: "/tasks/mine", label: "My Tasks" },
+  { href: "/tasks/mine", label: "My Tasks and Projects" },
 ];
 
 function NavLink({ href, label }: { href: string; label: string }) {

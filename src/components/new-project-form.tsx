@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { AssigneeEditor } from "@/components/assignee-editor";
 import type { Lane, ProjectStatus } from "@/lib/types";
 
 const STATUSES: ProjectStatus[] = [
@@ -28,7 +29,7 @@ export function NewProjectForm({
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<ProjectStatus>("future");
   const [laneId, setLaneId] = useState("");
-  const [assignee, setAssignee] = useState("");
+  const [assignees, setAssignees] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -42,7 +43,7 @@ export function NewProjectForm({
       description: description || null,
       status,
       lane_id: laneId || null,
-      assignee: assignee || null,
+      assignees,
       position: projectCountByLane[laneId || "unassigned"] ?? 0,
     });
 
@@ -57,7 +58,7 @@ export function NewProjectForm({
     setDescription("");
     setStatus("future");
     setLaneId("");
-    setAssignee("");
+    setAssignees([]);
     setOpen(false);
     router.refresh();
   }
@@ -138,16 +139,11 @@ export function NewProjectForm({
           </select>
         </div>
 
-        <div>
+        <div className="col-span-2">
           <label className="mb-1 block text-sm font-medium text-gray-700">
-            Assignee
+            Assignees
           </label>
-          <input
-            placeholder="Name or Both"
-            value={assignee}
-            onChange={(e) => setAssignee(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
-          />
+          <AssigneeEditor value={assignees} onChange={setAssignees} />
         </div>
       </div>
 

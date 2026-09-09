@@ -27,7 +27,7 @@ export interface Project {
   doc_links: DocLink[];
   lane_id: string | null;
   position: number;
-  assignee: string | null;
+  assignees: string[];
   created_at: string;
 }
 

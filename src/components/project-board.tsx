@@ -577,7 +577,7 @@ function LaneOverlayProjects({
   );
 }
 
-function ProjectCardContent({
+export function ProjectCardContent({
   project,
   progress,
 }: {
@@ -601,9 +601,9 @@ function ProjectCardContent({
           <p className="mb-3 text-sm text-gray-600">{project.description}</p>
         )}
 
-        {project.assignee && (
+        {project.assignees.length > 0 && (
           <p className="mb-2 text-xs text-gray-500">
-            Assigned to {project.assignee}
+            Assigned to {project.assignees.join(", ")}
           </p>
         )}
 
