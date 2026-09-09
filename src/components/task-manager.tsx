@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { AssigneeEditor } from "@/components/assignee-editor";
 import { DocLinkChips } from "@/components/doc-link-chips";
 import { DocLinkEditor } from "@/components/doc-link-editor";
 import { TaskStatusControl } from "@/components/task-status-control";
@@ -26,16 +27,22 @@ export function TaskManager({
   tasks,
   projectId,
   projects,
+  defaultAssignees,
 }: {
   tasks: Task[];
   projectId?: string;
   projects?: ProjectOption[];
+  defaultAssignees?: string[];
 }) {
   const sorted = sortTasks(tasks);
 
   return (
     <div className="space-y-4">
-      <AddTaskForm projectId={projectId} projects={projects} />
+      <AddTaskForm
+        projectId={projectId}
+        projects={projects}
+        defaultAssignees={defaultAssignees}
+      />
 
       {sorted.length === 0 ? (
         <p className="text-sm text-gray-500">No tasks yet.</p>
@@ -58,9 +65,11 @@ export function TaskManager({
 function AddTaskForm({
   projectId,
   projects,
+  defaultAssignees,
 }: {
   projectId?: string;
   projects?: ProjectOption[];
+  defaultAssignees?: string[];
 }) {
   const router = useRouter();
   const supabase = createClient();
@@ -70,7 +79,7 @@ function AddTaskForm({
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState<TaskStatus>("todo");
   const [dueDate, setDueDate] = useState("");
-  const [assignee, setAssignee] = useState("");
+  const [assignees, setAssignees] = useState<string[]>(defaultAssignees ?? []);
   const [selectedProject, setSelectedProject] = useState(
     projectId ?? projects?.[0]?.id ?? "",
   );
@@ -88,7 +97,7 @@ function AddTaskForm({
       notes: notes || null,
       status,
       due_date: dueDate || null,
-      assignee: assignee || null,
+      assignees,
     });
 
     setSaving(false);
@@ -102,7 +111,7 @@ function AddTaskForm({
     setNotes("");
     setStatus("todo");
     setDueDate("");
-    setAssignee("");
+    setAssignees(defaultAssignees ?? []);
     setOpen(false);
     router.refresh();
   }
@@ -177,16 +186,11 @@ function AddTaskForm({
           />
         </div>
 
-        <div>
+        <div className="col-span-2">
           <label className="mb-1 block text-sm font-medium text-gray-700">
-            Assignee
+            Assignees
           </label>
-          <input
-            placeholder="Name or Both"
-            value={assignee}
-            onChange={(e) => setAssignee(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
-          />
+          <AssigneeEditor value={assignees} onChange={setAssignees} />
         </div>
 
         {!projectId && projects && (
@@ -247,7 +251,7 @@ function TaskRow({
   const [title, setTitle] = useState(task.title);
   const [notes, setNotes] = useState(task.notes ?? "");
   const [dueDate, setDueDate] = useState(task.due_date ?? "");
-  const [assignee, setAssignee] = useState(task.assignee ?? "");
+  const [assignees, setAssignees] = useState(task.assignees);
   const [projectIdField, setProjectIdField] = useState(task.project_id ?? "");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -307,7 +311,7 @@ function TaskRow({
       title,
       notes: notes || null,
       due_date: dueDate || null,
-      assignee: assignee || null,
+      assignees,
       project_id: projectIdField || null,
     });
 
@@ -353,7 +357,9 @@ function TaskRow({
             <p className="mt-0.5 text-xs text-gray-500">
               {showProject && projectName ? `${projectName} · ` : ""}
               {task.due_date ? `Due ${task.due_date}` : "No due date"}
-              {task.assignee ? ` · ${task.assignee}` : ""}
+              {task.assignees.length > 0
+                ? ` · ${task.assignees.join(", ")}`
+                : ""}
             </p>
             {task.doc_links.length > 0 && (
               <div className="mt-2">
@@ -439,16 +445,11 @@ function TaskRow({
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
             />
           </div>
-          <div>
+          <div className="col-span-2">
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Assignee
+              Assignees
             </label>
-            <input
-              placeholder="Name or Both"
-              value={assignee}
-              onChange={(e) => setAssignee(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
-            />
+            <AssigneeEditor value={assignees} onChange={setAssignees} />
           </div>
 
           {showProject && projects && (

@@ -7,11 +7,16 @@ const LINKS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/projects", label: "Projects" },
   { href: "/tasks", label: "Tasks" },
+  { href: "/tasks/mine", label: "My Tasks" },
 ];
 
 function NavLink({ href, label }: { href: string; label: string }) {
   const pathname = usePathname();
-  const active = pathname === href || pathname.startsWith(`${href}/`);
+  const active =
+    href === "/tasks"
+      ? pathname === "/tasks" ||
+        (pathname.startsWith("/tasks/") && pathname !== "/tasks/mine")
+      : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <Link

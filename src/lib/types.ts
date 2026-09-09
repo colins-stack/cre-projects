@@ -38,7 +38,7 @@ export interface Task {
   notes: string | null;
   status: TaskStatus;
   due_date: string | null;
-  assignee: string | null;
+  assignees: string[];
   doc_links: DocLink[];
   created_at: string;
   completed_at: string | null;
@@ -55,5 +55,11 @@ export interface Subtask {
   done: boolean;
   assignee: string | null;
   position: number;
+  created_at: string;
+}
+
+export interface Profile {
+  id: string;
+  display_name: string;
   created_at: string;
 }

@@ -14,18 +14,18 @@ export default async function TasksPage({
   let query = supabase.from("tasks").select("*");
   if (project) query = query.eq("project_id", project);
   if (status) query = query.eq("status", status as TaskStatus);
-  if (assignee) query = query.eq("assignee", assignee);
+  if (assignee) query = query.contains("assignees", [assignee]);
 
   const [{ data: tasks }, { data: projects }, { data: allTasks }] =
     await Promise.all([
       query,
       supabase.from("projects").select("id, name").order("name"),
-      supabase.from("tasks").select("assignee").not("assignee", "is", null),
+      supabase.from("tasks").select("assignees"),
     ]);
 
   const assignees = Array.from(
-    new Set((allTasks ?? []).map((t) => t.assignee).filter(Boolean)),
-  ) as string[];
+    new Set((allTasks ?? []).flatMap((t) => t.assignees)),
+  ).sort();
 
   return (
     <div className="mx-auto max-w-4xl">

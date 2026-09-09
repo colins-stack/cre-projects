@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { AssigneeEditor } from "@/components/assignee-editor";
 import { DocLinkEditor } from "@/components/doc-link-editor";
 import { TaskStatusControl } from "@/components/task-status-control";
 import type { DocLink, Task, TaskStatus } from "@/lib/types";
@@ -21,7 +22,7 @@ export function TaskDetail({
   const [title, setTitle] = useState(task.title);
   const [notes, setNotes] = useState(task.notes ?? "");
   const [dueDate, setDueDate] = useState(task.due_date ?? "");
-  const [assignee, setAssignee] = useState(task.assignee ?? "");
+  const [assignees, setAssignees] = useState(task.assignees);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -78,7 +79,7 @@ export function TaskDetail({
       title,
       notes: notes || null,
       due_date: dueDate || null,
-      assignee: assignee || null,
+      assignees,
     });
 
     setSaving(false);
@@ -150,17 +151,13 @@ export function TaskDetail({
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
               />
             </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Assignee
-              </label>
-              <input
-                placeholder="Name or Both"
-                value={assignee}
-                onChange={(e) => setAssignee(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
-              />
-            </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Assignees
+            </label>
+            <AssigneeEditor value={assignees} onChange={setAssignees} />
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
@@ -230,7 +227,9 @@ export function TaskDetail({
 
           <p className="mb-3 text-sm text-gray-500">
             {task.due_date ? `Due ${task.due_date}` : "No due date"}
-            {task.assignee ? ` · ${task.assignee}` : ""}
+            {task.assignees.length > 0
+              ? ` · ${task.assignees.join(", ")}`
+              : ""}
           </p>
 
           {task.notes && (
