@@ -100,10 +100,10 @@ export function TaskDetail({
     router.refresh();
   }
 
-  async function handleAddDocLink(link: DocLink) {
+  async function handleDocLinksChange(nextLinks: DocLink[]) {
     const { error } = await supabase
       .from("tasks")
-      .update({ doc_links: [...task.doc_links, link] })
+      .update({ doc_links: nextLinks })
       .eq("id", task.id);
 
     if (!error) router.refresh();
@@ -244,7 +244,10 @@ export function TaskDetail({
 
       <div>
         <p className="mb-1 text-sm font-medium text-gray-700">Doc links</p>
-        <DocLinkEditor links={task.doc_links} onAdd={handleAddDocLink} />
+        <DocLinkEditor
+          links={task.doc_links}
+          onChange={handleDocLinksChange}
+        />
       </div>
     </div>
   );

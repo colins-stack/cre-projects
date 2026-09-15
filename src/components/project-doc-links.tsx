@@ -15,15 +15,15 @@ export function ProjectDocLinks({
   const router = useRouter();
   const supabase = createClient();
 
-  async function handleAdd(link: DocLink) {
+  async function handleChange(nextLinks: DocLink[]) {
     const { error } = await supabase
       .from("projects")
-      .update({ doc_links: [...links, link] })
+      .update({ doc_links: nextLinks })
       .eq("id", projectId);
 
     if (!error) router.refresh();
     return { error: error?.message ?? null };
   }
 
-  return <DocLinkEditor links={links} onAdd={handleAdd} />;
+  return <DocLinkEditor links={links} onChange={handleChange} />;
 }

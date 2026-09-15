@@ -319,10 +319,10 @@ function TaskRow({
     if (ok) setEditing(false);
   }
 
-  async function handleAddDocLink(link: DocLink) {
+  async function handleDocLinksChange(nextLinks: DocLink[]) {
     const { error } = await supabase
       .from("tasks")
-      .update({ doc_links: [...task.doc_links, link] })
+      .update({ doc_links: nextLinks })
       .eq("id", task.id);
 
     if (!error) router.refresh();
@@ -475,7 +475,10 @@ function TaskRow({
 
         <div>
           <p className="mb-1 text-sm font-medium text-gray-700">Doc links</p>
-          <DocLinkEditor links={task.doc_links} onAdd={handleAddDocLink} />
+          <DocLinkEditor
+            links={task.doc_links}
+            onChange={handleDocLinksChange}
+          />
         </div>
 
         {error && <p className="text-sm text-red-600">{error}</p>}
