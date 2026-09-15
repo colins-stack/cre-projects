@@ -1,5 +1,6 @@
 "use client";
 
+import { normalizeUrl } from "@/lib/url";
 import type { DocLink } from "@/lib/types";
 
 export function DocLinkChips({ links }: { links: DocLink[] }) {
@@ -10,7 +11,7 @@ export function DocLinkChips({ links }: { links: DocLink[] }) {
       {links.map((link, i) => (
         <a
           key={i}
-          href={link.url}
+          href={normalizeUrl(link.url)}
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}

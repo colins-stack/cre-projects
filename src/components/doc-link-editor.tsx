@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { normalizeUrl } from "@/lib/url";
 import type { DocLink } from "@/lib/types";
 
 export function DocLinkEditor({
@@ -44,10 +45,13 @@ export function DocLinkEditor({
     setError(null);
     setSaving(true);
 
+    const normalizedUrl = normalizeUrl(url);
     const nextLinks =
       editingIndex === null
-        ? [...links, { label, url }]
-        : links.map((l, i) => (i === editingIndex ? { label, url } : l));
+        ? [...links, { label, url: normalizedUrl }]
+        : links.map((l, i) =>
+            i === editingIndex ? { label, url: normalizedUrl } : l,
+          );
 
     const result = await onChange(nextLinks);
 
@@ -79,7 +83,7 @@ export function DocLinkEditor({
               className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 py-1.5 pl-3 pr-1.5 text-sm text-gray-700"
             >
               <a
-                href={link.url}
+                href={normalizeUrl(link.url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:underline"
@@ -121,8 +125,7 @@ export function DocLinkEditor({
           />
           <input
             required
-            type="url"
-            placeholder="https://..."
+            placeholder="example.com"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             className="min-w-0 flex-1 rounded-lg border border-gray-300 px-2 py-1 text-sm focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
@@ -148,7 +151,7 @@ export function DocLinkEditor({
           onClick={openAdd}
           className="text-xs font-medium text-gray-500 hover:text-gray-700"
         >
-          + Add doc link
+          + Add link
         </button>
       )}
     </div>
