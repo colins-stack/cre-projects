@@ -72,11 +72,11 @@ export function DocLinkEditor({
   return (
     <div className="space-y-2">
       {links.length > 0 && (
-        <ul className="flex flex-wrap gap-1.5">
+        <ul className="flex flex-wrap gap-2">
           {links.map((link, i) => (
             <li
               key={i}
-              className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 py-0.5 pl-2 pr-1 text-xs text-gray-700"
+              className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 py-1.5 pl-3 pr-1.5 text-sm text-gray-700"
             >
               <a
                 href={link.url}
@@ -90,7 +90,7 @@ export function DocLinkEditor({
                 type="button"
                 onClick={() => openEdit(i)}
                 aria-label={`Edit ${link.label}`}
-                className="px-0.5 text-gray-400 hover:text-gray-700"
+                className="px-1 text-gray-400 hover:text-gray-700"
               >
                 ✎
               </button>
@@ -98,7 +98,7 @@ export function DocLinkEditor({
                 type="button"
                 onClick={() => handleRemove(i)}
                 aria-label={`Remove ${link.label}`}
-                className="px-0.5 text-gray-400 hover:text-red-600"
+                className="px-1 text-base text-gray-400 hover:text-red-600"
               >
                 ×
               </button>
